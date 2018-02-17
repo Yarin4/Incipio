@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Mgate\PersonneBundle\Entity\PersonneRepository")
  */
-class Personne extends Adressable
+class Personne extends Adressable implements AnonymizableInterface
 {
     /**
      * @var int
@@ -88,18 +88,24 @@ class Personne extends Adressable
     private $estAbonneNewsletter;
 
     /**
+     * @var Employe
+     *
      * @ORM\OneToOne(targetEntity="Mgate\PersonneBundle\Entity\Employe", mappedBy="personne", cascade={"persist", "merge", "remove"})
      * @ORM\JoinColumn(nullable=true,onDelete="CASCADE" )
      */
     private $employe;
 
     /**
+     * @var User
+     *
      * @ORM\OneToOne(targetEntity="Mgate\UserBundle\Entity\User", mappedBy="personne", cascade={"persist", "merge", "remove"})
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      */
     private $user;
 
     /**
+     * @var Membre
+     *
      * @ORM\OneToOne(targetEntity="Mgate\PersonneBundle\Entity\Membre", mappedBy="personne", cascade={"persist", "merge", "remove"})
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      */
@@ -139,6 +145,29 @@ class Personne extends Adressable
             }
         } else {
             return '';
+        }
+    }
+
+    /** GDPR implementation, erase all personnal data */
+    public function anonymize() {
+        parent::anonymize();
+        $this->prenom = 'a';
+        $this->nom = 'nonyme';
+        $this->sexe = null;
+        $this->mobile = null;
+        $this->fix = null;
+        $this->email = null;
+        $this->emailEstValide = false;
+        $this->estAbonneNewsletter = false;
+
+        if($this->employe != null){
+            $this->employe->anonymize();
+        }
+        if($this->membre != null){
+            $this->membre->anonymize();
+        }
+        if($this->user != null){
+            $this->setUser(null);
         }
     }
 

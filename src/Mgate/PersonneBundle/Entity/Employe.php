@@ -15,12 +15,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Mgate\PersonneBundle\Entity\Employe.
  *
  * @ORM\Table()
  * @ORM\Entity
  */
-class Employe
+class Employe implements AnonymizableInterface
 {
     /**
      * @var int
@@ -52,6 +51,11 @@ class Employe
      * @ORM\Column(name="poste", type="string", length=255, nullable=true)
      */
     private $poste;
+
+    public function anonymize()
+    {
+        $this->poste = null;
+    }
 
     /**
      * Get id.

@@ -36,6 +36,7 @@ employe:
   ajouter_employe: Ajouter un employé
   ajouter_employe_a: Ajouter un employé à
   confirmation_supprimer_employe: Etes-vous sûr de vouloir supprimer définitivement cet employé ?
+  employe: Employé
   employes: Employés
   liste_employe: Liste des employés
   modifier_employe: Modifier l'employé

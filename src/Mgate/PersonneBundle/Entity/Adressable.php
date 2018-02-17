@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 /** @ORM\MappedSuperclass
  * Class gathering adresse related informations. Factorize code in an unique class.
  */
-class Adressable
+class Adressable implements AnonymizableInterface
 {
     /**
      * @var string
@@ -43,12 +43,20 @@ class Adressable
      */
     private $pays;
 
+    public function anonymize()
+    {
+        $this->adresse = null;
+        $this->codepostal = null;
+        $this->ville = null;
+        $this->pays = null;
+    }
+
     /**
      * Set adresse.
      *
      * @param string $adresse
      *
-     * @return Personne
+     * @return Adressable
      */
     public function setAdresse($adresse)
     {
@@ -72,7 +80,7 @@ class Adressable
      *
      * @param int $codepostal
      *
-     * @return Prospect
+     * @return Adressable
      */
     public function setCodePostal($codepostal)
     {
@@ -96,7 +104,7 @@ class Adressable
      *
      * @param string $ville
      *
-     * @return Prospect
+     * @return Adressable
      */
     public function setVille($ville)
     {
@@ -120,7 +128,7 @@ class Adressable
      *
      * @param string $pays
      *
-     * @return Prospect
+     * @return Adressable
      */
     public function setPays($pays)
     {
