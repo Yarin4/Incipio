@@ -12,6 +12,8 @@ namespace Mgate\PersonneBundle\Entity;
 
 interface AnonymizableInterface
 {
-    /** Remove all personnal data */
-    public function anonymize();
+    /** Related to GDPR,
+     * Remove all personnal data of the current class.
+     */
+    public function anonymize(): void;
 }

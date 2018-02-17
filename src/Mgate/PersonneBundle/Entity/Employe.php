@@ -62,7 +62,10 @@ class Employe implements AnonymizableInterface
      */
     private $poste;
 
-    public function anonymize()
+    /**
+     * {@inheritdoc}
+     */
+    public function anonymize(): void
     {
         $this->poste = null;
     }

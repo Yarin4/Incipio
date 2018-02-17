@@ -118,6 +118,9 @@ membre:
   photo: Photo
   postes_occupes: Postes occupés
   supprimer_membre: Supprimer le membre
+  securite_sociale_message: >
+    Le numéro de sécurité sociale n'est visible que pour les membres du pôle tréso (ROLE_TRESO) et
+    le responsable RGPD.
 personne:
   mail_invalide: Email non valide
   mail_valide: Email valide

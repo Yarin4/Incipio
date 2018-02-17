@@ -52,7 +52,10 @@ class Adressable implements AnonymizableInterface
      */
     private $pays;
 
-    public function anonymize()
+    /**
+     * {@inheritdoc}
+     */
+    public function anonymize(): void
     {
         $this->adresse = null;
         $this->codepostal = null;

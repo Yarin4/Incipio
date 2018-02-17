@@ -30,10 +30,10 @@
                     {{ 'privacy.action_select'|trans({}, 'privacy') }}
                 </label>
                 <select class="select2 form-control" id="action" name="action">
-                    <option value="access">{{ 'privacy.acceder'|trans({}, 'privacy') }}</option>
-                    <option value="delete">{{ 'privacy.supprimer'|trans({}, 'privacy') }}</option>
-                    <option value="modify">{{ 'privacy.modifier'|trans({}, 'privacy') }}</option>
-                    <option value="export">{{ 'privacy.exporter'|trans({}, 'privacy') }}</option>
+                    <option value="{{ constant('N7consulting\\PrivacyBundle\\Controller\\PrivacyController::GDPR_ACCESS_ACTION') }}">{{ 'privacy.acceder'|trans({}, 'privacy') }}</option>
+                    <option value="{{ constant('N7consulting\\PrivacyBundle\\Controller\\PrivacyController::GDPR_DELETE_ACTION') }}">{{ 'privacy.supprimer'|trans({}, 'privacy') }}</option>
+                    <option value="{{ constant('N7consulting\\PrivacyBundle\\Controller\\PrivacyController::GDPR_MODIFY_ACTION') }}">{{ 'privacy.modifier'|trans({}, 'privacy') }}</option>
+                    <option value="{{ constant('N7consulting\\PrivacyBundle\\Controller\\PrivacyController::GDPR_EXPORT_ACTION') }}">{{ 'privacy.exporter'|trans({}, 'privacy') }}</option>
                 </select>
 
             </div>

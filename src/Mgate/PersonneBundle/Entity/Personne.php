@@ -16,7 +16,6 @@ use Mgate\UserBundle\Entity\User;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 /**
  * Mgate\PersonneBundle\Entity\Personne.
  *
@@ -177,10 +176,13 @@ class Personne extends Adressable implements AnonymizableInterface
         }
     }
 
-    /** GDPR implementation, erase all personnal data */
-    public function anonymize()
+    /**
+     * {@inheritdoc}
+     */
+    public function anonymize(): void
     {
         parent::anonymize();
+
         $this->prenom = 'a';
         $this->nom = 'nonyme';
         $this->sexe = null;
@@ -190,13 +192,13 @@ class Personne extends Adressable implements AnonymizableInterface
         $this->emailEstValide = false;
         $this->estAbonneNewsletter = false;
 
-        if (null != $this->employe) {
+        if (null !== $this->employe) {
             $this->employe->anonymize();
         }
-        if (null != $this->membre) {
+        if (null !== $this->membre) {
             $this->membre->anonymize();
         }
-        if (null != $this->user) {
+        if (null !== $this->user) {
             $this->setUser(null);
         }
     }

@@ -205,7 +205,10 @@ class Membre implements AnonymizableInterface
         return $this->getPersonne()->__toString();
     }
 
-    public function anonymize()
+    /**
+     * {@inheritdoc}
+     */
+    public function anonymize(): void
     {
         $this->dateConventionEleve = null;
         $this->identifiant = null;

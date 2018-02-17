@@ -20,14 +20,17 @@ use Symfony\Component\Serializer\Serializer;
 class PrivacyController extends Controller
 {
     /** GDPR actions */
-    public const ACCESS = 'access';
-    public const DELETE = 'delete';
-    public const MODIFY = 'modify';
-    public const EXPORT = 'export';
+    public const GDPR_ACCESS_ACTION = 'access';
+
+    public const GDPR_DELETE_ACTION = 'delete';
+
+    public const GDPR_MODIFY_ACTION = 'modify';
+
+    public const GDPR_EXPORT_ACTION = 'export';
 
     /**
      * @Security("has_role('ROLE_RGPD')")
-     * @Route("/", name="privacy_homepage")
+     * @Route("/", name="privacy_homepage", methods={"GET"})
      */
     public function indexAction()
     {
@@ -72,19 +75,19 @@ class PrivacyController extends Controller
 
         $action = $request->request->get('action');
 
-        if (self::ACCESS == $action) {
+        if (self::GDPR_ACCESS_ACTION === $action) {
             return $this->access($personne);
         }
 
-        if (self::DELETE == $action) {
+        if (self::GDPR_DELETE_ACTION === $action) {
             return $this->delete($personne);
         }
 
-        if (self::MODIFY == $action) {
+        if (self::GDPR_MODIFY_ACTION === $action) {
             return $this->modify($personne);
         }
 
-        if (self::EXPORT == $action) {
+        if (self::GDPR_EXPORT_ACTION === $action) {
             return $this->export($personne);
         }
 
@@ -119,10 +122,10 @@ class PrivacyController extends Controller
 
     private function modify(Personne $personne)
     {
-        if (null != $personne->getMembre()) {
+        if (null !== $personne->getMembre()) {
             return $this->redirectToRoute('MgatePersonne_membre_modifier', ['id' => $personne->getMembre()->getId()]);
         }
-        if (null != $personne->getEmploye()) {
+        if (null !== $personne->getEmploye()) {
             return $this->redirectToRoute('MgatePersonne_employe_modifier', ['id' => $personne->getEmploye()->getId()]);
         }
 
@@ -137,7 +140,7 @@ class PrivacyController extends Controller
 
         $serializer = new Serializer([new DateTimeNormalizer(), new ObjectNormalizer($classMetadataFactory)]);
 
-        $data = $serializer->normalize($personne, null, array('groups' => array('gdpr')));
+        $data = $serializer->normalize($personne, null, ['groups' => ['gdpr']]);
 
         $response = new JsonResponse($data);
         $response->headers->set('Cache-Control', 'private');
