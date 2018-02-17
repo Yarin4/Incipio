@@ -9,6 +9,7 @@
 namespace Mgate\PersonneBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /** @ORM\MappedSuperclass
  * Class gathering adresse related informations. Factorize code in an unique class.
@@ -18,12 +19,16 @@ class Adressable implements AnonymizableInterface
     /**
      * @var string
      *
+     * @Groups({"gdpr"})
+     *
      * @ORM\Column(name="adresse", type="string", length=127, nullable=true)
      */
     private $adresse;
 
     /**
      * @var int(5)
+     *
+     * @Groups({"gdpr"})
      *
      * @ORM\Column(name="codepostal", type="integer", nullable=true)
      */
@@ -32,12 +37,16 @@ class Adressable implements AnonymizableInterface
     /**
      * @var string
      *
+     * @Groups({"gdpr"})
+     *
      * @ORM\Column(name="ville", type="string", length=63, nullable=true)
      */
     private $ville;
 
     /**
      * @var string
+     *
+     * @Groups({"gdpr"})
      *
      * @ORM\Column(name="pays", type="string", length=63, nullable=true)
      */

@@ -13,10 +13,10 @@ namespace Mgate\PersonneBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Mgate\PersonneBundle\Entity\Filiere.
  *
  * @ORM\Table()
  * @ORM\Entity
@@ -36,7 +36,11 @@ class Filiere
 
     /**
      * @var string
+     *
      * @Assert\NotBlank()
+     *
+     * @Groups({"gdpr"})
+     *
      * @ORM\Column(type="string", length=63)
      */
     private $nom;

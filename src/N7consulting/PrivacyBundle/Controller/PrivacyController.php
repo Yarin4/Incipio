@@ -2,20 +2,27 @@
 
 namespace N7consulting\PrivacyBundle\Controller;
 
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Mgate\PersonneBundle\Entity\Personne;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class PrivacyController extends Controller
 {
-
     /** GDPR actions */
     public const ACCESS = 'access';
     public const DELETE = 'delete';
-    public const MODIFY = 'modifiy';
+    public const MODIFY = 'modify';
     public const EXPORT = 'export';
 
     /**
@@ -81,14 +88,14 @@ class PrivacyController extends Controller
             return $this->export($personne);
         }
 
-        $this->addFlash('danger','Invalid action');
-        return $this->redirectToRoute('privacy_homepage');
+        $this->addFlash('danger', 'Action invalide');
 
+        return $this->redirectToRoute('privacy_homepage');
     }
 
     private function access(Personne $personne)
     {
-        return $this->render('');
+        return $this->render('@N7consultingPrivacy/Privacy/access.html.twig', ['personne' => $personne]);
     }
 
     private function delete(Personne $personne)
@@ -101,10 +108,10 @@ class PrivacyController extends Controller
             $em->remove($personne);
             $em->flush();
             $this->addFlash('success', 'Personne supprimée');
-        } catch (\Exception $e) {
-            $this->addFlash('warning','La personne a signée des documents et ne
-            peux être supprimée sans nuire à l\'intégrité des données. Le maximum de ses données personnelles
-            ont été supprimées et le reste (nom, prénom) a été anonymisé');
+        } catch (ForeignKeyConstraintViolationException $e) {
+            $this->addFlash('warning', 'La personne a signée des documents et ne
+            peux être supprimée sans nuire à l\'intégrité des données réglementaires (historique des missions ...). 
+            Le maximum de ses données personnelles ont été supprimées et le reste a été anonymisé');
         }
 
         return $this->redirectToRoute('privacy_homepage');
@@ -112,11 +119,31 @@ class PrivacyController extends Controller
 
     private function modify(Personne $personne)
     {
-        return $this->render('');
+        if (null != $personne->getMembre()) {
+            return $this->redirectToRoute('MgatePersonne_membre_modifier', ['id' => $personne->getMembre()->getId()]);
+        }
+        if (null != $personne->getEmploye()) {
+            return $this->redirectToRoute('MgatePersonne_employe_modifier', ['id' => $personne->getEmploye()->getId()]);
+        }
+
+        $this->addFlash('danger', 'Cette personne n\'est ni un membre ni un ouvrier');
+
+        return $this->redirectToRoute('privacy_homepage');
     }
 
     private function export(Personne $personne)
     {
-        return $this->render('');
+        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+
+        $serializer = new Serializer([new DateTimeNormalizer(), new ObjectNormalizer($classMetadataFactory)]);
+
+        $data = $serializer->normalize($personne, null, array('groups' => array('gdpr')));
+
+        $response = new JsonResponse($data);
+        $response->headers->set('Cache-Control', 'private');
+        $response->headers->set('Content-type', 'application/json');
+        $response->headers->set('Content-Disposition', 'attachment; filename="Export-RGPD-' . date('Y-m-d') . '-' . $personne->getNom() . '.json";');
+
+        return $response;
     }
 }

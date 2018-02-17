@@ -123,6 +123,7 @@ personne:
   mail_valide: Email valide
   newsletter_abonne: Abonné à la newsletter
   newsletter_non_abonne: N'est pas abonné à la newsletter
+  personne: Personne
 poste:
   ajouter_poste: Ajouter un poste
   champs:

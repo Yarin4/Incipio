@@ -12,10 +12,10 @@
 namespace Mgate\PersonneBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- *
  * @ORM\Table()
  * @ORM\Entity
  */
@@ -31,15 +31,23 @@ class Employe implements AnonymizableInterface
     protected $id;
 
     /**
+     * @var Prospect
+     *
      * @Assert\NotNull()
+     *
+     * @Groups({"gdpr"})
+     *
      * @ORM\ManyToOne(targetEntity="Prospect", inversedBy="employes", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $prospect;
 
     /**
+     * @var Personne
+     *
      * @Assert\Valid()
      * @Assert\NotNull()
+     *
      * @ORM\OneToOne(targetEntity="Personne", inversedBy="employe", fetch="EAGER", cascade={"persist", "merge", "remove"})
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
@@ -47,6 +55,8 @@ class Employe implements AnonymizableInterface
 
     /**
      * @var string
+     *
+     * @Groups({"gdpr"})
      *
      * @ORM\Column(name="poste", type="string", length=255, nullable=true)
      */
@@ -82,8 +92,6 @@ class Employe implements AnonymizableInterface
     }
 
     /**
-     * Get prospect.
-     *
      * @return Prospect
      */
     public function getProspect()

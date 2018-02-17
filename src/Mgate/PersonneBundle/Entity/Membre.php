@@ -18,6 +18,7 @@ use Mgate\PubliBundle\Entity\RelatedDocument;
 use Mgate\SuiviBundle\Entity\Mission;
 use N7consulting\RhBundle\Entity\Competence;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -37,6 +38,8 @@ class Membre implements AnonymizableInterface
     protected $id;
 
     /**
+     * @Groups({"gdpr"})
+     *
      * @ORM\OneToMany(targetEntity="Mgate\SuiviBundle\Entity\Mission", mappedBy="intervenant",
      *                                                                 cascade={"persist","remove"})
      */
@@ -54,12 +57,16 @@ class Membre implements AnonymizableInterface
     /**
      * @var \DateTime
      *
+     * @Groups({"gdpr"})
+     *
      * @ORM\Column(name="dateCE", type="date",nullable=true)
      */
     private $dateConventionEleve;
 
     /**
      * @var string
+     *
+     * @Groups({"gdpr"})
      *
      * @ORM\Column(name="identifiant", type="string", length=10, nullable=true, unique=true)
      */
@@ -68,12 +75,16 @@ class Membre implements AnonymizableInterface
     /**
      * @var string
      *
+     * @Groups({"gdpr"})
+     *
      * @ORM\Column(name="emailEMSE", type="string", length=50, nullable=true)
      */
     private $emailEMSE;
 
     /**
      * @var int
+     *
+     * @Groups({"gdpr"})
      *
      * @Assert\LessThanOrEqual(32767)
      *
@@ -84,6 +95,8 @@ class Membre implements AnonymizableInterface
     /**
      * @var \DateTime
      *
+     * @Groups({"gdpr"})
+     *
      * @ORM\Column(name="birthdate", type="date", nullable=true)
      */
     private $dateDeNaissance;
@@ -91,12 +104,16 @@ class Membre implements AnonymizableInterface
     /**
      * @var string
      *
+     * @Groups({"gdpr"})
+     *
      * @ORM\Column(name="placeofbirth", type="string", nullable=true)
      */
     private $lieuDeNaissance;
 
     /**
      * @Assert\Valid()
+     *
+     * @Groups({"gdpr"})
      *
      * @ORM\OneToMany(targetEntity="Mgate\PersonneBundle\Entity\Mandat", mappedBy="membre",
      *                                                                   cascade={"persist","remove"},
@@ -106,6 +123,8 @@ class Membre implements AnonymizableInterface
 
     /**
      * @var string
+     *
+     * @Groups({"gdpr"})
      *
      * @ORM\Column(name="nationalite", type="string", nullable=true)
      */
@@ -118,6 +137,9 @@ class Membre implements AnonymizableInterface
 
     /**
      * @var string
+     *
+     * @Groups({"gdpr"})
+     *
      * @ORM\Column(name="photoURI", type="string", nullable=true)
      */
     private $photoURI;
@@ -127,11 +149,17 @@ class Membre implements AnonymizableInterface
     /**
      * @var string
      *
+     * @Groups({"gdpr"})
+     *
      * @ORM\Column(name="formatPaiement", type="string", length=15, nullable=true)
      */
     private $formatPaiement;
 
     /**
+     * @var Filiere
+     *
+     * @Groups({"gdpr"})
+     *
      * @Assert\NotNull()
      *
      * @ORM\ManyToOne(targetEntity="Mgate\PersonneBundle\Entity\Filiere")
@@ -139,6 +167,10 @@ class Membre implements AnonymizableInterface
     private $filiere;
 
     /**
+     * @var string
+     *
+     * @Groups({"gdpr"})
+     *
      * @ORM\Column(name="securiteSociale", type="string", length=25, nullable=true)
      */
     private $securiteSociale;
@@ -151,6 +183,10 @@ class Membre implements AnonymizableInterface
     private $commentaire;
 
     /**
+     * @var Competence[]|ArrayCollection
+     *
+     * @Groups({"gdpr"})
+     *
      * @ORM\ManyToMany(targetEntity="N7consulting\RhBundle\Entity\Competence", mappedBy="membres", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
@@ -183,9 +219,9 @@ class Membre implements AnonymizableInterface
         $this->securiteSociale = null;
         $this->commentaire = null;
 
-        /** remove non critical (business related) relations */
+        /* remove non critical (business related) relations */
         /** @var Competence $c */
-        foreach ($this->competences as $c){
+        foreach ($this->competences as $c) {
             $c->removeMembre($this);
         }
 
@@ -194,7 +230,7 @@ class Membre implements AnonymizableInterface
             $this->removeMandat($m);
         }
 
-        /** @var Document $m */
+        /* @var Document $m */
         foreach ($this->relatedDocuments as $d) {
             $this->removeRelatedDocument($d);
         }

@@ -13,7 +13,9 @@ namespace Mgate\PersonneBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Mgate\UserBundle\Entity\User;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * Mgate\PersonneBundle\Entity\Personne.
@@ -34,20 +36,30 @@ class Personne extends Adressable implements AnonymizableInterface
 
     /**
      * @var string
+     *
      * @Assert\NotBlank()
+     *
+     * @Groups({"gdpr"})
+     *
      * @ORM\Column(name="prenom", type="string", length=255)
      */
     private $prenom;
 
     /**
      * @var string
+     *
      * @Assert\NotBlank()
+     *
+     * @Groups({"gdpr"})
+     *
      * @ORM\Column(name="nom", type="string", length=255)
      */
     private $nom;
 
     /**
      * @var string
+     *
+     * @Groups({"gdpr"})
      *
      * @ORM\Column(name="sexe", type="string", length=15, nullable=true)
      */
@@ -56,12 +68,16 @@ class Personne extends Adressable implements AnonymizableInterface
     /**
      * @var string
      *
+     * @Groups({"gdpr"})
+     *
      * @ORM\Column(name="mobile", type="string", length=31, nullable=true)
      */
     private $mobile;
 
     /**
      * @var string
+     *
+     * @Groups({"gdpr"})
      *
      * @ORM\Column(name="fix", type="string", length=31, nullable=true)
      */
@@ -70,6 +86,8 @@ class Personne extends Adressable implements AnonymizableInterface
     /**
      * @var string
      *
+     * @Groups({"gdpr"})
+     *
      * @ORM\Column(name="email", type="string", length=63, nullable=true)
      */
     private $email;
@@ -77,18 +95,25 @@ class Personne extends Adressable implements AnonymizableInterface
     /**
      * @var bool
      *
+     * @Groups({"gdpr"})
+     *
      * @ORM\Column(name="emailestvalide", type="boolean", nullable=false, options={"default" = true})
      */
     private $emailEstValide;
 
     /**
      * @var bool
+     *
+     * @Groups({"gdpr"})
+     *
      * @ORM\Column(name="estabonnenewsletter", type="boolean", nullable=false, options={"default" = true})
      */
     private $estAbonneNewsletter;
 
     /**
      * @var Employe
+     *
+     * @Groups({"gdpr"})
      *
      * @ORM\OneToOne(targetEntity="Mgate\PersonneBundle\Entity\Employe", mappedBy="personne", cascade={"persist", "merge", "remove"})
      * @ORM\JoinColumn(nullable=true,onDelete="CASCADE" )
@@ -98,6 +123,8 @@ class Personne extends Adressable implements AnonymizableInterface
     /**
      * @var User
      *
+     * @Groups({"gdpr"})
+     *
      * @ORM\OneToOne(targetEntity="Mgate\UserBundle\Entity\User", mappedBy="personne", cascade={"persist", "merge", "remove"})
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      */
@@ -105,6 +132,8 @@ class Personne extends Adressable implements AnonymizableInterface
 
     /**
      * @var Membre
+     *
+     * @Groups({"gdpr"})
      *
      * @ORM\OneToOne(targetEntity="Mgate\PersonneBundle\Entity\Membre", mappedBy="personne", cascade={"persist", "merge", "remove"})
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
@@ -149,7 +178,8 @@ class Personne extends Adressable implements AnonymizableInterface
     }
 
     /** GDPR implementation, erase all personnal data */
-    public function anonymize() {
+    public function anonymize()
+    {
         parent::anonymize();
         $this->prenom = 'a';
         $this->nom = 'nonyme';
@@ -160,13 +190,13 @@ class Personne extends Adressable implements AnonymizableInterface
         $this->emailEstValide = false;
         $this->estAbonneNewsletter = false;
 
-        if($this->employe != null){
+        if (null != $this->employe) {
             $this->employe->anonymize();
         }
-        if($this->membre != null){
+        if (null != $this->membre) {
             $this->membre->anonymize();
         }
-        if($this->user != null){
+        if (null != $this->user) {
             $this->setUser(null);
         }
     }

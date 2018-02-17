@@ -118,8 +118,8 @@ class PersonneRepository extends EntityRepository
             ->addSelect('employe')
              ->leftJoin('p.membre', 'membre')
             ->addSelect('membre');
-        if($orderByNom) {
-            $query->orderBy('p.nom','asc');
+        if ($orderByNom) {
+            $query->orderBy('p.nom', 'asc');
         }
 
         return $query->getQuery()->getResult();
