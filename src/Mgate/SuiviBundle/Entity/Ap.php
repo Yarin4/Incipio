@@ -69,7 +69,8 @@ class Ap extends DocType
 
     public function getReference()
     {
-        return $this->getEtude()->getReference() . '/' . $this->getDateSignature()->format('Y') . '/PM/' . $this->getVersion();
+        return $this->getEtude()->getReference() . '/' . ($this->getDateSignature() != null ?
+                $this->getDateSignature()->format('Y'): '') . '/PM/' . $this->getVersion();
     }
 
     /**
