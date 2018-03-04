@@ -12,17 +12,16 @@ Feature: Procès-Verbal
     Then the url should match "/suivi/etude"
     And I should see "PV ajouté"
     
-  Scenario: I can write a new PVI
+  Scenario: I can write a new PVR
     Given I am logged in as "admin"
     Given I am on "/suivi/procesverbal/rediger/5/pvr"
     Then the response status code should be 200
     When I fill "Version du document" with "1"
-    When I fill "Signataire Junior" with the name of the signatory of the JE
-    When I fill "Signataire {name of the company)" with the name of the signatory of the company
-    When I fill "Date de Signature du document" with a date
-    And I press "Valider le Procès-Verbal"
+    When I select "14" from "Signataire Teknik studio"
+    When I fill "Date de Signature du document" with "2018-03-03"
+    And I press "Enregistrer"
     Then the url should match "/suivi/etude"
-    And I should see "PV ajouté"
+    And I should see "PV rédigé"
     
     
   Scenario: I can edit a PVI
